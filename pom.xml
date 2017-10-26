@@ -33,6 +33,6 @@
             <artifactId>flow-component-demo-helpers</artifactId>
             <version>${flow.version}</version>
             <scope>test</scope>
-        </dependency>      
+        </dependency>
     </dependencies>
 </project>
