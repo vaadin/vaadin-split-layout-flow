@@ -232,6 +232,12 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
         super.removeAll();
     }
 
+    @Override
+    public Registration addSplitterDragendListener(
+            ComponentEventListener<SplitterDragendEvent<SplitLayout>> listener) {
+        return super.addSplitterDragendListener(listener);
+    }
+
     private SplitLayout setInnerComponentStyle(Component innerComponent,
             String styleName, String value) {
         Optional.ofNullable(innerComponent).ifPresent(component -> component
