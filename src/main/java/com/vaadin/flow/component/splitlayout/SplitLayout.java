@@ -222,6 +222,7 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
             container.add(components);
             primaryComponent = container;
         }
+        setComponents();
     }
 
     /**
@@ -252,6 +253,7 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
             container.add(components);
             secondaryComponent = container;
         }
+        setComponents();
     }
 
     /**
