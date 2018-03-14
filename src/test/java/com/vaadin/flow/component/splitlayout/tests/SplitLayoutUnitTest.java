@@ -23,16 +23,15 @@ public class SplitLayoutUnitTest {
 
         Component primaryComponent = splitLayout.getPrimaryComponent();
 
-        Assert.assertTrue("The slot doesn't contain the primary component.",
-                primaryComponent.getElement().toString()
-                .contains("slot=\"primary\""));
+        Assert.assertEquals("The slot doesn't contain the primary slot.",
+                "primary", primaryComponent.getElement().getAttribute("slot"));
         Assert.assertEquals("No wrapper div", "div", primaryComponent.getElement().getTag());
         Assert.assertEquals("Wrong number of children", 3, primaryComponent.getChildren().count());
 
         Component secondaryComponent = splitLayout.getSecondaryComponent();
-        Assert.assertTrue("The slot doesn't contain the secondary component.",
-                secondaryComponent.getElement().toString()
-                        .contains("slot=\"secondary\""));
+        Assert.assertEquals("The slot doesn't contain the secondary slot.",
+                "secondary",
+                secondaryComponent.getElement().getAttribute("slot"));
         Assert.assertEquals("No wrapper div", "div", secondaryComponent.getElement().getTag());
         Assert.assertEquals("Wrong number of children", 2, secondaryComponent.getChildren().count());
     }
