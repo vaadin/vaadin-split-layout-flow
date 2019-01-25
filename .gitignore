@@ -5,3 +5,6 @@ target/
 .project
 .settings
 .classpath
+
+# IntelliJ IDEA files
+.idea/
