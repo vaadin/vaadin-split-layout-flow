@@ -5,3 +5,13 @@ target/
 .project
 .settings
 .classpath
+
+# IntelliJ files
+.idea/
+*.iml
+
+# The following files are generated/updated by flow-maven-plugin
+package.json
+package-lock.json
+webpack.config.js
+node_modules/
