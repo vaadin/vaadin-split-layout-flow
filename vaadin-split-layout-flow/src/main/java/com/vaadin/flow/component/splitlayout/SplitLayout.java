@@ -296,7 +296,7 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
      * @param value     the value to set
      */
     public void setPrimaryStyle(String styleName, String value) {
-        setInnerComponentStyle(primaryComponent, styleName, value);
+        setInnerComponentStyle(primaryComponent, styleName, value, true);
     }
 
     /**
@@ -306,7 +306,7 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
      * @param value     the value to set
      */
     public void setSecondaryStyle(String styleName, String value) {
-        setInnerComponentStyle(secondaryComponent, styleName, value);
+        setInnerComponentStyle(secondaryComponent, styleName, value, false);
     }
 
     private void setComponents() {
@@ -350,8 +350,15 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
     }
 
     private void setInnerComponentStyle(Component innerComponent,
-                                               String styleName, String value) {
-        Optional.ofNullable(innerComponent).ifPresent(component -> component
-                .getElement().getStyle().set(styleName, value));
+            String styleName, String value, boolean primary) {
+        if (innerComponent != null) {
+            innerComponent.getElement().getStyle().set(styleName, value);
+        } else {
+            getElement().executeJs(
+                    "var children = this.children;"
+                            + "var element = children && children[$0];"
+                            + "if (element) { element.style[$1]=$2; }",
+                    primary ? 0 : 1, styleName, value);
+        }
     }
 }
