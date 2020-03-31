@@ -20,6 +20,7 @@ import java.util.Objects;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.ElementConstants;
@@ -137,6 +138,7 @@ import com.vaadin.flow.shared.Registration;
  * @author Vaadin Ltd
  */
 @NpmPackage(value = "@vaadin/vaadin-split-layout", version = "4.1.1")
+@JsModule("./splitlayoutConnector.js")
 public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
         implements HasSize {
 
@@ -155,6 +157,8 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
      */
     public SplitLayout() {
         setOrientation(Orientation.HORIZONTAL);
+        final String INIT_CONNECTOR = "window.Vaadin.Flow.splitlayoutConnector.initLazy(this)";
+        addAttachListener(e -> getElement().executeJs(INIT_CONNECTOR));
     }
 
     /**
@@ -269,23 +273,23 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
     /**
      * Sets the relative position of the splitter in percentages. The given
      * value is used to set how much space is given to the primary component
-     * relative to the secondary component. In horizontal mode this is the width
-     * of the component and in vertical mode this is the height. The given value
-     * will automatically be clamped to the range [0, 100].
+     * relative to the secondary component. It will calculate and set the flex-basis property of the primary and secondary components.
+     * The given value will automatically be clamped to the range [0, 100].
      *
      * @param position the relative position of the splitter, in percentages
      */
     public void setSplitterPosition(double position) {
-        double primary = Math.min(Math.max(position, 0), 100);
-        double secondary = 100 - primary;
-        String styleName;
-        if (getOrientation() == Orientation.VERTICAL) {
-            styleName = ElementConstants.STYLE_HEIGHT;
-        } else {
-            styleName = ElementConstants.STYLE_WIDTH;
-        }
-        setPrimaryStyle(styleName, primary + "%");
-        setSecondaryStyle(styleName, secondary + "%");
+        final double newSplitterPosition = Math.min(Math.max(position, 0), 100);
+
+        getElement().getNode()
+            .runWhenAttached(ui -> ui.beforeClientResponse(this, context -> {
+                boolean hasElements =
+                    (primaryComponent != null && secondaryComponent != null)
+                        || getElement().getChildCount() > 1;
+                getElement()
+                    .executeJs("this.$connector.setSplitterPosition($0, $1)",
+                        newSplitterPosition, hasElements);
+            }));
     }
 
     /**
@@ -360,4 +364,5 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
                     primary ? 0 : 1, styleName, value);
         }
     }
+
 }

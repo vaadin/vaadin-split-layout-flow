@@ -58,23 +58,29 @@ public class SplitterPositionIT extends AbstractComponentIT {
         TestBenchElement secondaryElement = layout.$(SpanElement.class)
                 .id("secondary" + testId);
         assertElementWidth(primaryElement,
-                (int) SplitterPositionView.INITIAL_POSITION + "%");
+                 SplitterPositionView.INITIAL_POSITION);
         assertElementWidth(secondaryElement,
-                (int) SplitterPositionView.FINAL_POSITION + "%");
+                 SplitterPositionView.FINAL_POSITION);
 
         $(NativeButtonElement.class).id("setSplitPosition" + testId).click();
         assertElementWidth(primaryElement,
-                (int) SplitterPositionView.FINAL_POSITION + "%");
+                 SplitterPositionView.FINAL_POSITION);
         assertElementWidth(secondaryElement,
-                (int) SplitterPositionView.INITIAL_POSITION + "%");
+                 SplitterPositionView.INITIAL_POSITION);
     }
 
-    private void assertElementWidth(TestBenchElement element, String expected) {
-        executeScript("console.log(arguments[0])", element);
-        executeScript("console.log(arguments[0].style)", element);
-        executeScript("console.log(arguments[0].style.width)", element);
-        Assert.assertEquals(expected,
-                element.getPropertyString("style", "width"));
+    private void assertElementWidth(TestBenchElement element, double expected) {
+        final double parentWidth = getWidth(element,".parentNode");
+        final double splitterWidth = getWidth(element,".parentNode.$.splitter");
+        final double calculatedExpectedWidth = expected * (parentWidth - splitterWidth) / 100d;
+        final double width = getWidth(element,"");
+        final double tolerance = 0.01; // 1% tolerance
+        Assert.assertTrue(Math.abs(calculatedExpectedWidth - width) < (calculatedExpectedWidth * tolerance));
     }
 
+    private double getWidth(TestBenchElement element, String path) {
+        final String sourcePath = "arguments[0]" + path;
+
+        return ((Number) executeScript("return " + sourcePath + ".getBoundingClientRect()['width']", element)).doubleValue();
+    }
 }
