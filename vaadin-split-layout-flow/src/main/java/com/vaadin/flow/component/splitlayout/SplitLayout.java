@@ -20,6 +20,7 @@ import java.util.Objects;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Div;
@@ -143,6 +144,7 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
 
     private Component primaryComponent;
     private Component secondaryComponent;
+    private Double splitterPosition;
 
     /**
      * numeration of all available orientation for VaadinSplitLayout component
@@ -157,7 +159,24 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
     public SplitLayout() {
         setOrientation(Orientation.HORIZONTAL);
         final String INIT_CONNECTOR = "window.Vaadin.Flow.splitlayoutConnector.initLazy(this)";
-        addAttachListener(e -> getElement().executeJs(INIT_CONNECTOR));
+        addAttachListener(e -> {
+            getElement().executeJs(INIT_CONNECTOR);
+            getElement().getNode().runWhenAttached(this::callSetSplitterPositionInConnector);
+        });
+    }
+
+    private void callSetSplitterPositionInConnector(UI ui) {
+        ui.beforeClientResponse(this, context -> {
+            if (this.splitterPosition == null) {
+                return;
+            }
+            boolean hasElements =
+                (primaryComponent != null && secondaryComponent != null)
+                    || getElement().getChildCount() > 1;
+            getElement()
+                .executeJs("this.$connector.setSplitterPosition($0, $1)",
+                    this.splitterPosition, hasElements);
+        });
     }
 
     /**
@@ -279,16 +298,10 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
      */
     public void setSplitterPosition(double position) {
         final double newSplitterPosition = Math.min(Math.max(position, 0), 100);
-
-        getElement().getNode()
-            .runWhenAttached(ui -> ui.beforeClientResponse(this, context -> {
-                boolean hasElements =
-                    (primaryComponent != null && secondaryComponent != null)
-                        || getElement().getChildCount() > 1;
-                getElement()
-                    .executeJs("this.$connector.setSplitterPosition($0, $1)",
-                        newSplitterPosition, hasElements);
-            }));
+        this.splitterPosition = newSplitterPosition;
+        if (getElement().getNode().isAttached()) {
+            getUI().ifPresent(this::callSetSplitterPositionInConnector);
+        }
     }
 
     /**
