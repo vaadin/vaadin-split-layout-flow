@@ -13,4 +13,6 @@ target/
 # The following files are generated/updated by flow-maven-plugin
 package*.json
 webpack.*.js
-node_modules/
+tsconfig.json
+types.d.ts
+node_modules
