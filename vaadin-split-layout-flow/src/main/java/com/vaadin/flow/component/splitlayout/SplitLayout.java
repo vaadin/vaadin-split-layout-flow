@@ -161,21 +161,6 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
         addAttachListener(e -> this.clearStylesAddedByWebcomponent(e.getUI()));
     }
 
-    private void clearStylesAddedByWebcomponent(UI ui) {
-        if (clearStylesRegistration != null) {
-            clearStylesRegistration.remove();
-        }
-        this.clearStylesRegistration = ui
-            .beforeClientResponse(this, context -> {
-                final String JS = "for(let i = 0;i < this.children.length;i++)"
-                    + "if(this.children[i].slot === 'primary'"
-                    + "   || this.children[i].slot === 'secondary')"
-                    + "this.children[i].style.flex = ''";
-                getElement().executeJs(JS);
-                this.clearStylesRegistration = null;
-            });
-    }
-
     /**
      * Constructs a VaadinSplitLayout with the given initial components to set
      * to the primary and secondary splits.
@@ -306,6 +291,21 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
         setPrimaryStyle(styleName, primary + "%");
         setSecondaryStyle(styleName, secondary + "%");
         getUI().ifPresent(this::clearStylesAddedByWebcomponent);
+    }
+
+    private void clearStylesAddedByWebcomponent(UI ui) {
+        if (clearStylesRegistration != null) {
+            clearStylesRegistration.remove();
+        }
+        this.clearStylesRegistration = ui
+            .beforeClientResponse(this, context -> {
+                final String JS = "for(let i = 0;i < this.children.length;i++)"
+                    + "if(this.children[i].slot === 'primary'"
+                    + "   || this.children[i].slot === 'secondary')"
+                    + "this.children[i].style.flex = ''";
+                getElement().executeJs(JS);
+                this.clearStylesRegistration = null;
+            });
     }
 
     /**
