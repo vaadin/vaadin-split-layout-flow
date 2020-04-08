@@ -6,8 +6,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.router.Route;
-
 
 /*
  * Copyright 2000-2020 Vaadin Ltd.
@@ -64,7 +62,6 @@ class LayoutComponent extends Div {
                 ((HasSize) primaryComponent).setSizeFull();
             }
 
-            //    		sidebarWrapper.removeAll();
             sidebarWrapper = null;
         }
 
