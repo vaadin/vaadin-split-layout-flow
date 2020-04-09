@@ -329,7 +329,6 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
         return ui.beforeClientResponse(this, execution);
     }
 
-
     /**
      * Set a style to the component in the primary split.
      *

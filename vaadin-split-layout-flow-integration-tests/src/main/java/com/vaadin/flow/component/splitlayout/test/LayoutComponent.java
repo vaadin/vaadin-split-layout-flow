@@ -1,12 +1,3 @@
-package com.vaadin.flow.component.splitlayout.test;
-
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.NativeButton;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
-
 /*
  * Copyright 2000-2020 Vaadin Ltd.
  *
@@ -22,6 +13,15 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.flow.component.splitlayout.test;
+
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
+
 class LayoutComponent extends Div {
 
     private SplitLayout sidebarWrapper;
