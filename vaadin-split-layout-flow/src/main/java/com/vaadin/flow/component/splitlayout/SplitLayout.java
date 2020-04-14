@@ -24,8 +24,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.ElementConstants;
-import com.vaadin.flow.function.SerializableConsumer;
-import com.vaadin.flow.internal.ExecutionContext;
 import com.vaadin.flow.internal.StateTree;
 import com.vaadin.flow.shared.Registration;
 
@@ -288,8 +286,11 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
     }
 
     private void requestStylesUpdatesForSplitterPosition(UI ui) {
-        this.updateStylesRegistration = debounce(this.updateStylesRegistration,
-            ui, context -> {
+        if (this.updateStylesRegistration != null) {
+            updateStylesRegistration.remove();
+        }
+        this.updateStylesRegistration = ui
+            .beforeClientResponse(this, context -> {
                 // Remove flex property for primary and secondary children.
                 final String JS = "for(let i = 0;i < this.children.length;i++)"
                     + "if(this.children[i].slot === 'primary'"
@@ -318,15 +319,6 @@ public class SplitLayout extends GeneratedVaadinSplitLayout<SplitLayout>
         }
         setPrimaryStyle(styleName, primary + "%");
         setSecondaryStyle(styleName, secondary + "%");
-    }
-
-    private StateTree.ExecutionRegistration debounce(
-        StateTree.ExecutionRegistration currentRegistration, UI ui,
-        SerializableConsumer<ExecutionContext> execution ) {
-        if(currentRegistration != null) {
-            currentRegistration.remove();
-        }
-        return ui.beforeClientResponse(this, execution);
     }
 
     /**
