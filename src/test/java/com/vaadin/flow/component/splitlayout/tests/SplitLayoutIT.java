@@ -24,6 +24,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.flow.component.splitlayout.demo.SplitLayoutView;
 import com.vaadin.flow.demo.ComponentDemoTest;
+import com.vaadin.testbench.TestBenchElement;
 
 /**
  * Integration tests for {@link SplitLayoutView}.
@@ -60,8 +61,8 @@ public class SplitLayoutIT extends ComponentDemoTest {
                 .findElements(By.tagName(SPLIT_LAYOUT_TAG)).get(3);
         WebElement resizeMessage = layout
                 .findElement(By.id("resize-message"));
-        WebElement splitter = getInShadowRoot(splitLayout, By.id("splitter"))
-                .findElement(By.tagName("div"));
+        WebElement splitter = wrap(TestBenchElement.class, splitLayout).$("*")
+                .id("splitter").findElement(By.tagName("div"));
 
         new Actions(getDriver()).dragAndDropBy(splitter, 1, 1).clickAndHold()
                 .moveByOffset(200, 0).release().build().perform();
@@ -94,8 +95,8 @@ public class SplitLayoutIT extends ComponentDemoTest {
     public void min_and_max_width_splitter() {
         WebElement splitLayout = layout
                 .findElements(By.tagName(SPLIT_LAYOUT_TAG)).get(5);
-        WebElement splitter = getInShadowRoot(splitLayout, By.id("splitter"))
-                .findElement(By.tagName("div"));
+        WebElement splitter = wrap(TestBenchElement.class, splitLayout).$("*")
+                .id("splitter").findElement(By.tagName("div"));
         WebElement primaryComponent = findElement(
                 By.id("min-max-first-component"));
 
